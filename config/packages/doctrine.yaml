@@ -7,6 +7,11 @@ parameters:
 
 doctrine:
     dbal:
+        dbname:               symfony
+        host:                 localhost
+        port:                 3306
+        user:                 symfony
+        password:             symfony1+
         # configure these for your database server
         driver: 'pdo_mysql'
         server_version: '5.7'
