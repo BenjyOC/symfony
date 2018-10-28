@@ -34,4 +34,24 @@ class HomePageController extends AbstractController
             'comments' => $comments
         ]);
     }
+
+    /**
+     * @Route("/debug/{slug}", name="debug")
+     */
+    public function debug($slug)
+    {
+        $title = "bracloud";
+        $comments = [
+            'Devops is DevOps',
+            'Youhou !',
+            'BravOps !',
+        ];
+
+	dump($slug, $this);
+
+        return $this->render('home.html.twig', [
+            'title' => $slug,
+            'comments' => $comments
+        ]);
+    }
 }
