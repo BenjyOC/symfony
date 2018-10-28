@@ -18,13 +18,20 @@ class HomePageController extends AbstractController
     }
 
     /**
-     * @Route("/random/{slug}", name="random")
+     * @Route("/home", name="home")
      */
-    public function random($slug)
+    public function home()
     {
-       return new Response(sprintf(
-            'Random page to show : "%s"',
-            $slug
-        ));
+        $title = "bracloud";
+        $comments = [
+            'Devops is DevOps',
+            'Youhou !',
+            'BravOps !',
+        ];
+
+        return $this->render('home.html.twig', [
+            'title' => $title,
+            'comments' => $comments
+        ]);
     }
 }
