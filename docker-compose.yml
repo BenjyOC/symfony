@@ -1,0 +1,68 @@
+version: '3.1'
+
+services:
+  php:
+    image: bra-php:latest
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - web
+    restart: always
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 172.17.0.1:24224
+        tag: php-fpm.access
+
+  nginx:
+    image: bra-nginx:latest
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - web
+    restart: always
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 172.17.0.1:24224
+        tag: httpd.access
+
+  fluentd:
+    image: bra-fluentd:latest
+    build:
+      context: .
+      dockerfile: docker/fluentd/Dockerfile
+    volumes:
+      - ./docker/fluentd/conf:/fluentd/etc
+    networks:
+      - web
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
+    environment:
+      discovery.type: single-node
+    networks:
+      - web
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.0
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks:
+      - web
+    ports:
+      - "5601:5601"
+
+networks:
+  web:
+    external:
+      name: web
